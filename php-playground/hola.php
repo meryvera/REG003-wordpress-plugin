@@ -19,7 +19,18 @@
     $path = getcwd();
     echo $path;
     error_log($path);
+
     //error_log($path .'/hola.php');
+    function admin_url( $path = 'html/wp-content/plugins/wordpressProject/form.php', $scheme = 'admin' ) {
+      return get_admin_url( null, $path, $scheme );
+   }
+   error_log(admin_url())
+
+   // function admin_url2() {
+   //    return 'holiiiiiii';
+   // };
+   // error_log(admin_url2())
+
     ?>   
  </body>
 </html>

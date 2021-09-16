@@ -10,16 +10,16 @@ Author: Astrid & Mery
 Licence: MIT
 */
 
-if(!defined('ABSPATH')) exit;
+if (!defined('ABSPATH')) exit;
 
 function Activate(){
-
 }
+
 function Deactivate(){
-    flush_rewrite_rules();
+	flush_rewrite_rules();
 }
 
-echo"Hola soy plugin";
+echo "Hola soy plugin";
 
 register_activation_hook(__FILE__, 'Activate');
 register_deactivation_hook(__FILE__, 'Deactivate');
@@ -27,69 +27,73 @@ register_deactivation_hook(__FILE__, 'Deactivate');
 add_action('admin_menu', 'CreateMenu');
 
 function CreateMenu() {
-    add_menu_page(
-        'Instrucciones de uso del plugin Menú',
-        'DonationPlugin',
-        'manage_options',
-        plugin_dir_path(__FILE__). 'admin/table.php',
-        null,
-        '1'
-    );
+	add_menu_page(
+		'Instrucciones de uso del plugin Menú', //pageTitle
+		'DonationPlugin',//menuTitle
+		'manage_options',//capability
+		plugin_dir_path(__FILE__) . 'admin/mainpage.php',//menuSlug
+		null, //functionName
+		'1' //position
+	);
+	add_submenu_page(
+		plugin_dir_path(__FILE__) . 'admin/mainpage.php',//menuSlug
+		'Submenu 1',
+		'Historial de Donaciones',
+		'manage_options',
+		plugin_dir_path(__FILE__) . 'admin/history.php',
+		null,
+		'2'
+	);
+	add_submenu_page(
+		plugin_dir_path(__FILE__) . 'admin/mainpage.php',//menuSlug
+		'Submenu 2',
+		'Settings Culqi',
+		'manage_options',
+		plugin_dir_path(__FILE__) . 'admin/settings.php',
+		null,
+		'3'
+	);
 }
 
-// function ShowContent() {
-//     echo "<h1>Instrucciones para usar el plugin de donación</h1>";
-// }
-// 'sp_menu',
-// 'ShowContent',
-
-// Shortcode
-
-function example_plugin()
-{
-	/* create a variable to hold the html information */
-	$content = ''; /* creates a string variable */
-
-	/* open the form tag */
-	$content .= '<form method="post" action="'.plugin_dir_path(__FILE__).'admin/processed.php">'; /* adds to the string variable */
-
-	$content .= '<input type="number" name="Importe" placeholder="Monto a aportar" /><br /><br />';
-	$content .= '<input type="text" name="your_name" placeholder="Nombre completo" /><br /><br />';
-	$content .= '<input type="email" name="your_email" placeholder="Email" /><br /><br />';
-    $content .= '<input type="number" name="phone" placeholder="Número de teléfono" /><br /><br />';
-    $content .= '<input type="number" name="card" placeholder="Número de tarjeta" /><br /><br />';
-    $content .= '<input type="date" name="expiration" placeholder="Fecha de exp." /><br /><br />';
-    $content .= '<input type="number" name="cvv" placeholder="CVV" /><br /><br />';
-
-	$content .= '<input type="submit" name="form_exaple_contact_submit" value="DONAR" /><br /><br />';
-
-	/* close the form tag */
-	$content .= '</form>';
-
-	return $content;
+add_shortcode('ShortcodeDonate', 'ShortcodeDonation');
+function ShortcodeDonation($atts){
+	//attributes
+	$atts = shortcode_atts(
+		array(
+			'button_text3' => 'Donar',
+			'text_content' => ''
+		),
+		$atts
+	);
+	return '
+		<div>
+			<button
+				onclick="document.querySelector(\'.donation-plugin-modal\').style.display = \'block\'"
+			>'
+			. $atts['button_text3'] .
+			'</button>
+      <div class="donation-plugin-modal" style="display: none;">
+        <form method="post">
+					<div class="mb-2">
+						<label for="exampleInputEmail1" class="form-label">Nombres</label>
+						<input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="name">
+					</div>
+					<div class="mb-2">
+						<label for="exampleInputEmail1" class="form-label">Apellidos</label>
+						<input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="name">
+					</div>
+					<div class="mb-2">
+						<label for="exampleInputEmail1" class="form-label">Correo</label>
+						<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+					</div>
+					<div class="mb-3">
+						<label for="exampleInputPassword1" class="form-label">Llave</label>
+						<input type="password" class="form-control" id="exampleInputPassword1">
+						<div id="emailHelp" class="form-text">Tu llave es confidencial.</div>
+					</div>
+					<button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+      </div>
+    </div>
+    ';
 }
-add_shortcode('pluginForm' , 'example_plugin');
-
-function Shortcode() {
-    return "<button>Dona acá</button>";
-} add_shortcode('plugin_shortcode', 'Shortcode');
-
-function Shortcode2($atts) {
-    //attributes
-    $atts = shortcode_atts(
-        array( 'button_text2' => 'Donar'), $atts
-    );
-    return 'Hola, este es el: '.$atts['button_text2'];
-} add_shortcode('plugin_shortcode2', 'Shortcode2');
-
-
-add_shortcode('plugin_shortcode3', 'Shortcode3');
-function Shortcode3($atts) {
-    //attributes
-    $atts = shortcode_atts(
-        array( 'button_text3' => 'Donar'
-        ), $atts
-    );
-    //return '<button onclick="console.log(\'hola\')" data-toggle="modal" data-target="#ourModal">'. $atts['button_text3'] . '</button>';
-    return '<button onclick="window.location=\'form.php\'" data-toggle="modal" data-target="#ourModal">'. $atts['button_text3'] . '</button>';
-} 
