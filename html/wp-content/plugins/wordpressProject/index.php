@@ -13,6 +13,18 @@ Licence: MIT
 if (!defined('ABSPATH')) exit;
 
 function Activate(){
+  // crea una tabla de bd desde wordpress
+  global $wpdb;
+
+  $sql = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}donaciones(
+      `DonacionId` INT NOT NULL AUTO_INCREMENT,
+      `Monto` INT NOT NULL,
+      `Nombre` VARCHAR(50) NULL,
+      `Email` VARCHAR(50) NULL,
+      `Telefono` INT NOT NULL,
+      PRIMARY KEY (`DonacionId`));";
+
+  $wpdb->query($sql);
 }
 
 function Deactivate(){
@@ -56,44 +68,29 @@ function CreateMenu() {
 }
 
 add_shortcode('ShortcodeDonate', 'ShortcodeDonation');
+
 function ShortcodeDonation($atts){
 	//attributes
 	$atts = shortcode_atts(
 		array(
-			'button_text3' => 'Donar',
-			'text_content' => ''
+			'title_text' => '[Title]'
 		),
 		$atts
 	);
+
 	return '
-		<div>
-			<button
-				onclick="document.querySelector(\'.donation-plugin-modal\').style.display = \'block\'"
-			>'
-			. $atts['button_text3'] .
-			'</button>
-      <div class="donation-plugin-modal" style="display: none;">
-        <form method="post">
-					<div class="mb-2">
-						<label for="exampleInputEmail1" class="form-label">Nombres</label>
-						<input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="name">
-					</div>
-					<div class="mb-2">
-						<label for="exampleInputEmail1" class="form-label">Apellidos</label>
-						<input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="name">
-					</div>
-					<div class="mb-2">
-						<label for="exampleInputEmail1" class="form-label">Correo</label>
-						<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-					</div>
-					<div class="mb-3">
-						<label for="exampleInputPassword1" class="form-label">Llave</label>
-						<input type="password" class="form-control" id="exampleInputPassword1">
-						<div id="emailHelp" class="form-text">Tu llave es confidencial.</div>
-					</div>
-					<button type="submit" class="btn btn-primary">Guardar</button>
-        </form>
-      </div>
+	  <div class="donation-plugin-modal" style="display: block; background: #362277; padding: 20px; border-radius: 10px; width:30%">
+      <h2 style="color:#e13e3f; text-align:center">'
+        . $atts['title_text'] .
+      '</h2><br/>
+      <form method="post" action="" style="text-align: center;">
+        <input type="number" name="Importe" placeholder="Monto a aportar" style="border-radius: 10px; border: none; outline: none; width: 100%"/><br /><br />
+        <input type="text" name="your_name" placeholder="Nombre completo" style="border-radius: 10px; border: none;  outline: none; width: 100%" /><br /><br />
+        <input type="email" name="your_email" placeholder="Email" style="border-radius: 10px; border: none;  outline: none ; width: 100%" /><br /><br />
+        <input type="number" name="phone" placeholder="Número de teléfono" style="border-radius: 10px; border: none;  outline: none; width: 100%" /><br /><br />
+        <input id="buyButton" type="submit" name="form_exaple_contact_submit" value="DONAR" style="border-radius: 10px; border: none; color: #362277; font-weight: bolder;background: #abe1c1;  outline: none ; width: 100%" /><br /><br />
+      </form>
     </div>
     ';
 }
+?>
