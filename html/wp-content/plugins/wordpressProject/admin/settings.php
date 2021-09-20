@@ -34,44 +34,7 @@
     <!-- Incluye Culqi Checkout en tu sitio web-->
   <script src="https://checkout.culqi.com/js/v3"></script>
   <script>
-    // let dp_settingBtn = document.getElementById('settingBtn');
-    // dp_settingBtn.addEventListener('click', (event) => {
-    //   event.preventDefault();
-    //   let dp_organizationName = document.getElementById('organizationName').value;
-    //   let dp_publicKey = document.getElementById('publicKey').value;
-    //   let dp_secretKey = document.getElementById('secretKey').value;
-    //   console.log(dp_organizationName.toString(), dp_publicKey.toString(), dp_secretKey);
 
 
-      // Configura tu llave pública
-      Culqi.publicKey = 'sk_test_f73937b9e690e803';
-      Culqi.init();
-      // Configura tu Culqi Checkout
-      Culqi.settings({
-        title: 'Culqi Store',
-        currency: 'PEN',
-        description: 'Polo Culqi lover',
-        amount: 3500
-      });
-      // Usa la funcion Culqi.open() en el evento que desees
-      $('#buyButton').on('click', function(e) {
-        // Abre el formulario con las opciones de Culqi.settings
-        Culqi.open();
-        e.preventDefault();
-      });
-
-      function culqi() {
-        if (Culqi.token) { // ¡Objeto Token creado exitosamente!
-            var token = Culqi.token.id;
-            alert('Se ha creado un token:' + token);
-            //En esta linea de codigo debemos enviar el "Culqi.token.id"
-            //hacia tu servidor con Ajax
-        } else { // ¡Hubo algún problema!
-            // Mostramos JSON de objeto error en consola
-            console.log(Culqi.error);
-            alert(Culqi.error.user_message);
-        }
-      };
-    // });
   </script>
 </html>
